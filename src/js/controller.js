@@ -1,3 +1,5 @@
 import "../sass/main.scss";
 
-console.log("hello");
+export function sayHi() {
+  return "Hello";
+}
