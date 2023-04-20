@@ -1,9 +1,12 @@
-'use strict';
+"use strict";
 
-import '../sass/main.scss';
+import "../sass/main.scss";
 
-export function Ship(length) {
+const ships = [];
+
+export function Ship(length, shipCoordiantes) {
   return {
+    shipCoordiantes,
     length,
     numOfHits: 0,
     isSunkBool: false,
@@ -31,32 +34,47 @@ export function Gameboard() {
   return {
     board,
     placeShip: function (beginCoordinate, endCoordinate, length) {
+      const shipCoordiantes = new Map();
       if (beginCoordinate[0] === endCoordinate[0]) {
         const constantCoord = beginCoordinate[0];
         let changingCoord = beginCoordinate[1];
         for (let i = 0; i < length; i++) {
-          this.board[constantCoord][changingCoord++] = length;
+          const key = [constantCoord, changingCoord];
+          shipCoordiantes.set(key, "N");
+          this.board[constantCoord][changingCoord++] = "N";
         }
       } else if (beginCoordinate[1] === endCoordinate[1]) {
         const constantCoord = beginCoordinate[1];
         let changingCoord = beginCoordinate[0];
         for (let i = 0; i < length; i++) {
-          this.board[changingCoord++][constantCoord] = length;
+          const key = [changingCoord, constantCoord];
+          shipCoordiantes.set(key, "N");
+          this.board[changingCoord++][constantCoord] = "N";
         }
       }
+      ships.push(Ship(length, shipCoordiantes));
     },
     printBoard: function () {
-      console.log('NEW BOARD');
-      this.board.map(row => {
-        console.log(row.join(' '));
-        console.log('-');
+      console.log("NEW BOARD");
+      this.board.map((row) => {
+        console.log(row.join(" "));
+        console.log("-");
       });
     },
     recieveAttack: function (attackCoordinate) {
-      if (this.board[attackCoordinate[0]][attackCoordinate[1]] === 0) {
-        this.board[attackCoordinate[0]][attackCoordinate[1]] = 'M';
-      } else if (this.board[attackCoordinate[0]][attackCoordinate[1]] !== 0) {
-        this.board[attackCoordinate[0]][attackCoordinate[1]] = 'H';
+      const attackCoordinates = [attackCoordinate[0], attackCoordinate[1]].join(
+        ""
+      );
+      for (let ship of ships) {
+        const arrFromMap = [...ship.shipCoordiantes.keys()];
+        for (const value of arrFromMap) {
+          if (value.join("") === attackCoordinates) {
+            console.log(ship);
+            ship.numOfHits++;
+            console.log(ship);
+            this.board[attackCoordinate[0]][attackCoordinate[1]] = "H";
+          }
+        }
       }
     },
   };
@@ -64,8 +82,10 @@ export function Gameboard() {
 
 const game = Gameboard();
 game.printBoard();
-game.placeShip([0, 0], [0, 2], 2);
+game.placeShip([0, 0], [0, 1], 2);
+game.printBoard();
 game.placeShip([1, 0], [6, 0], 5);
-game.placeShip([5, 9], [9, 9], 5);
-game.placeShip([2, 4], [7, 4], 5);
+game.printBoard();
+console.log(ships);
+game.recieveAttack([0, 0]);
 game.printBoard();
