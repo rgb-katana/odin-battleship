@@ -1,0 +1,31 @@
+.app {
+  min-width: 124rem;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  &__field {
+    background-color: white;
+    width: 50%;
+
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+
+    &::after {
+      content: '';
+      display: block;
+      padding-bottom: 100%;
+    }
+  }
+
+  &__cell {
+    background-color: blue;
+    &::after {
+      content: '';
+      display: block;
+      padding-bottom: 100%;
+    }
+  }
+}
