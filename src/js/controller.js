@@ -5,10 +5,10 @@ import '../sass/main.scss';
 import { Gameboard } from './gameboard';
 import { renderBoard, renderBoardAI, renderBoardInitial } from './view';
 
-const startBtn = document.querySelector('.controls__button');
-
-const alreadyHIT = [];
+let alreadyHIT = [];
 const alreadyHITbyPlayer = [];
+
+renderStartButton();
 
 let game = Gameboard();
 // console.log(game.board);
@@ -26,7 +26,7 @@ let gameAI = Gameboard();
 // gameAI.placeShip([1, 7], [1, 8], 2);
 
 // renderBoard(game.board);
-renderBoardAI(gameAI.board);
+renderBoardInitial(gameAI.board, true);
 renderBoardInitial(game.board);
 
 function generateCoords() {
@@ -46,113 +46,141 @@ function attackFromAI() {
   alreadyHIT.push(theHit.join(''));
 }
 
-function finishGame() {
+function finishGame(winner) {
   console.log('The game has ended');
+  document.querySelector('.content').insertAdjacentHTML(
+    'afterbegin',
+    `
+  <div class="end">
+    <div class="end__message">${winner} won</div>
+    <button class="end__replay">Play again</button>
+  </div>`
+  );
 }
 
-function play() {
-  document.addEventListener('click', function (e) {
-    // console.log(e.target);
-    if (
-      (e.target.classList.contains('app__cellAI') &&
-        e.target.innerText === '') ||
-      e.target.innerText === 'N'
-    ) {
-      const attackCoords = e.target.dataset.coords.split(',');
-      // console.log(attackCoords);
-      gameAI.recieveAttack(attackCoords);
-      if (gameAI.isAllSunk()) {
-        finishGame();
-      }
-      renderBoardAI(gameAI.board);
-      attackFromAI();
-      if (game.isAllSunk()) {
-        finishGame();
-      }
-      renderBoard(game.board);
-    }
-  });
-}
-
-startBtn.addEventListener('click', function (e) {
-  e.preventDefault();
-  e.target.remove();
+function renderStartButton() {
   document.querySelector('.controls').insertAdjacentHTML(
     'afterbegin',
     `
-  <form action="#" class="form">
-          <p class="form__message">
-            Place your ships!<br />
-            <b
-              >Input the beggining coordinate and the end coordinate like this:
-              0,0 0,1</b
-            >
-          </p>
-          <div class="form__input-box">
-            <input
-              type="text"
-              class="form__input"
-              id="carrier"
-              name="carrier"
-              required
-            />
-            <label for="carrier" class="form__label"
-              >Your Carrier [5 cells]</label
-            >
-          </div>
-          <div class="form__input-box">
-            <input
-              type="text"
-              class="form__input"
-              id="battleship"
-              name="battleship"
-              required
-            />
-            <label for="battleship" class="form__label"
-              >Your Battleship [4 cells]</label
-            >
-          </div>
-          <div class="form__input-box">
-            <input
-              type="text"
-              class="form__input"
-              id="cruiser"
-              name="cruiser"
-              required
-            />
-            <label for="cruiser" class="form__label"
-              >Your Cruiser [3 cells]</label
-            >
-          </div>
-          <div class="form__input-box">
-            <input
-              type="text"
-              class="form__input"
-              id="submarine"
-              name="submarine"
-              required
-            />
-            <label for="submarine" class="form__label"
-              >Your Submarine [3 cells]</label
-            >
-          </div>
-          <div class="form__input-box">
-            <input
-              type="text"
-              class="form__input"
-              id="destroyer"
-              name="destroyer"
-              required
-            />
-            <label for="destroyer" class="form__label"
-              >Your Destroyer [2 cells]</label
-            >
-          </div>
-          <div class="form__submit">
-            <button class="button__submit">Begin the battle</button>
-          </div>
-  `
+      <button class="controls__button">START GAME</button>
+      `
   );
+}
+
+document.addEventListener('click', function (e) {
+  if (e.target.classList.contains('end__replay')) {
+    document.querySelector('.end').remove();
+    alreadyHIT = [];
+    game = Gameboard();
+    gameAI = Gameboard();
+    renderBoardAI(gameAI.board);
+    renderBoardInitial(game.board);
+    renderStartButton();
+  }
+});
+
+document.addEventListener('click', function (e) {
+  // console.log(e.target);
+  if (
+    (e.target.classList.contains('app__cellAI') && e.target.innerText === '') ||
+    e.target.innerText === 'N'
+  ) {
+    const attackCoords = e.target.dataset.coords.split(',');
+    // console.log(attackCoords);
+    gameAI.recieveAttack(attackCoords);
+    if (gameAI.isAllSunk()) {
+      finishGame('You');
+    }
+    renderBoardAI(gameAI.board);
+    attackFromAI();
+    if (game.isAllSunk()) {
+      finishGame('Computer');
+    }
+    renderBoard(game.board);
+  }
+});
+
+document.addEventListener('click', function (e) {
+  if (e.target.classList.contains('controls__button')) {
+    e.preventDefault();
+    document.querySelector('.controls__button').remove();
+    document.querySelector('.controls').insertAdjacentHTML(
+      'afterbegin',
+      `
+    <form action="#" class="form">
+            <p class="form__message">
+              Place your ships!<br />
+              <b
+                >Input the beggining coordinate and the end coordinate like this:
+                0,0 0,1</b
+              >
+            </p>
+            <div class="form__input-box">
+              <input
+                type="text"
+                class="form__input"
+                id="carrier"
+                name="carrier"
+                required
+              />
+              <label for="carrier" class="form__label"
+                >Your Carrier [5 cells]</label
+              >
+            </div>
+            <div class="form__input-box">
+              <input
+                type="text"
+                class="form__input"
+                id="battleship"
+                name="battleship"
+                required
+              />
+              <label for="battleship" class="form__label"
+                >Your Battleship [4 cells]</label
+              >
+            </div>
+            <div class="form__input-box">
+              <input
+                type="text"
+                class="form__input"
+                id="cruiser"
+                name="cruiser"
+                required
+              />
+              <label for="cruiser" class="form__label"
+                >Your Cruiser [3 cells]</label
+              >
+            </div>
+            <div class="form__input-box">
+              <input
+                type="text"
+                class="form__input"
+                id="submarine"
+                name="submarine"
+                required
+              />
+              <label for="submarine" class="form__label"
+                >Your Submarine [3 cells]</label
+              >
+            </div>
+            <div class="form__input-box">
+              <input
+                type="text"
+                class="form__input"
+                id="destroyer"
+                name="destroyer"
+                required
+              />
+              <label for="destroyer" class="form__label"
+                >Your Destroyer [2 cells]</label
+              >
+            </div>
+            <div class="form__submit">
+              <button class="button__submit">Begin the battle</button>
+            </div>
+    `
+    );
+  }
 });
 
 document.addEventListener('click', function (e) {
@@ -194,6 +222,5 @@ document.addEventListener('click', function (e) {
     gameAI.placeShip([1, 7], [1, 8], 2);
     renderBoardAI(gameAI.board);
     document.querySelector('.controls').innerHTML = '';
-    play();
   }
 });

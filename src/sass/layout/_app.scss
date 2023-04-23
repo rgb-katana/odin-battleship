@@ -50,6 +50,21 @@
       display: block;
       padding-bottom: 100%;
     }
+
+    &--hit {
+      background-color: red;
+      color: transparent;
+    }
+
+    &--miss {
+      background-color: palevioletred;
+      color: transparent;
+    }
+
+    &--ship {
+      background-color: royalblue;
+      color: transparent;
+    }
   }
 
   &__cellAI {
@@ -58,11 +73,46 @@
     justify-content: center;
     align-items: center;
     font-size: 2rem;
+    color: transparent;
 
     &::after {
       content: '';
       display: block;
       padding-bottom: 100%;
     }
+
+    &--hit {
+      background-color: red;
+      color: transparent;
+    }
+
+    &--miss {
+      background-color: palevioletred;
+      color: transparent;
+    }
+
+    &--ship {
+      background-color: royalblue;
+      color: transparent;
+    }
+  }
+}
+
+.end {
+  position: absolute;
+  width: 100% !important;
+  height: 100vh;
+  background-color: darkgrey !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 3.5rem;
+  font-weight: 900;
+
+  &__replay {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    font-weight: 900;
   }
 }

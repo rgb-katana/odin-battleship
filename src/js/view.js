@@ -3,8 +3,24 @@
 const boardElement = document.querySelector('.app__field');
 const boardElementAI = document.querySelector('.app__fieldAI');
 
-export function renderBoardInitial(board) {
-  boardElement.innerHTML = '';
+export function renderBoardInitial(board, AI = false) {
+  if (!AI) {
+    boardElement.innerHTML = '';
+    let rowNum = 0;
+    for (const row of board) {
+      let cellNum = 0;
+      for (const cell of row) {
+        const newCell = document.createElement('div');
+        newCell.classList.add('app__cell');
+        newCell.dataset.coords = [rowNum, cellNum];
+        newCell.innerText = `${rowNum}, ${cellNum}`;
+        boardElement.appendChild(newCell);
+        cellNum++;
+      }
+      rowNum++;
+    }
+  }
+  boardElementAI.innerHTML = '';
   let rowNum = 0;
   for (const row of board) {
     let cellNum = 0;
@@ -13,7 +29,7 @@ export function renderBoardInitial(board) {
       newCell.classList.add('app__cell');
       newCell.dataset.coords = [rowNum, cellNum];
       newCell.innerText = `${rowNum}, ${cellNum}`;
-      boardElement.appendChild(newCell);
+      boardElementAI.appendChild(newCell);
       cellNum++;
     }
     rowNum++;
@@ -34,14 +50,17 @@ export function renderBoard(board) {
           boardElement.appendChild(newCell);
           break;
         case 'N':
+          newCell.classList.add('app__cell--ship');
           newCell.innerText = 'N';
           boardElement.appendChild(newCell);
           break;
         case 'M':
+          newCell.classList.add('app__cell--miss');
           newCell.innerText = 'M';
           boardElement.appendChild(newCell);
           break;
         case 'H':
+          newCell.classList.add('app__cell--hit');
           newCell.innerText = 'H';
           boardElement.appendChild(newCell);
           break;
@@ -71,10 +90,12 @@ export function renderBoardAI(board) {
           boardElementAI.appendChild(newCell);
           break;
         case 'M':
+          newCell.classList.add('app__cellAI--miss');
           newCell.innerText = 'M';
           boardElementAI.appendChild(newCell);
           break;
         case 'H':
+          newCell.classList.add('app__cellAI--hit');
           newCell.innerText = 'H';
           boardElementAI.appendChild(newCell);
           break;
