@@ -37,6 +37,7 @@ export function Gameboard() {
         }
       }
       this.ships.push(Ship(length, shipCoordiantes));
+      console.log(this.ships);
     },
     printBoard: function () {
       console.log('NEW BOARD');

@@ -3,6 +3,23 @@
 const boardElement = document.querySelector('.app__field');
 const boardElementAI = document.querySelector('.app__fieldAI');
 
+export function renderBoardInitial(board) {
+  boardElement.innerHTML = '';
+  let rowNum = 0;
+  for (const row of board) {
+    let cellNum = 0;
+    for (const cell of row) {
+      const newCell = document.createElement('div');
+      newCell.classList.add('app__cell');
+      newCell.dataset.coords = [rowNum, cellNum];
+      newCell.innerText = `${rowNum}, ${cellNum}`;
+      boardElement.appendChild(newCell);
+      cellNum++;
+    }
+    rowNum++;
+  }
+}
+
 export function renderBoard(board) {
   boardElement.innerHTML = '';
   let rowNum = 0;

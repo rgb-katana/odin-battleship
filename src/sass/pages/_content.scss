@@ -3,11 +3,22 @@
   height: 100vh;
   background-color: darkgray;
   display: grid;
-  grid-template-rows: 5rem 1fr 5rem;
+  grid-template-rows: 5rem 1fr 20rem 5rem;
 
   & > * {
     width: 80%;
     background-color: darkgray;
     margin: 0 auto;
+  }
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__button {
+    padding: 1rem 2rem;
+    font-weight: 900;
   }
 }
